@@ -1,4 +1,7 @@
-def get_user_stats_from_strava(athlete_id, last_update_epoch, strava_client_id, strava_client_secret):
+import pandas as pd
+
+
+def get_user_activities_from_strava(athlete_id, last_update_epoch, strava_client_id, strava_client_secret):
     import json
     import time
     import requests
@@ -36,8 +39,15 @@ def get_user_stats_from_strava(athlete_id, last_update_epoch, strava_client_id, 
     r = requests.get(f"{strava_api_url}?access_token={strava_tokens['access_token']}&per_page=20&page=1")
     r = r.json()
 
-    if r[0]['start_date'] < last_update_epoch:
-        return
-
-    else:
+    user_activites = pd.DataFrame(columns=[
+        "id",
+        "name",
+        "start_date_local",
+        "type",
+        "distance",
+        "moving_time",
+        "elapse_time",
+        "total_elevation_gain",
+        "private"
+    ])
 

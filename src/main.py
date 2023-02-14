@@ -48,7 +48,7 @@ def main():
                                                                                                  row_of_start_of_data)
 
     # Get user activities from Strava
-    update_dict = src.get_user_stats_from_strava.get_user_stats_from_strava()
+    update_dict = src.get_user_stats_from_strava.get_user_activities_from_strava()
 
 if __name__ == "__main__":
     main()
