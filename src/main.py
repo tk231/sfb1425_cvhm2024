@@ -29,9 +29,9 @@ def main():
     worksht = src.connect_to_googlespreadsheet.connect_to_google_spreadsheet(google_sheet_key, google_sheet_name)
 
     # Get starting date
-    start_date = src.get_date_from_googlespreadsheet.get_time_from_two_cells_in_googlespreadsheet(worksht,
-                                                                                                  start_date_cell)
-    end_date = src.get_date_from_googlespreadsheet.get_time_from_two_cells_in_googlespreadsheet(worksht, end_date_cell)
+    start_date = src.get_date_from_googlespreadsheet.get_epoch_time_from_two_cells_in_googlespreadsheet(worksht,
+                                                                                                        start_date_cell)
+    end_date = src.get_date_from_googlespreadsheet.get_epoch_time_from_two_cells_in_googlespreadsheet(worksht, end_date_cell)
 
     # Create data structures to store activity info
     # user_dict: dictionary from Google Sheets containing all users and their Strava IDs
