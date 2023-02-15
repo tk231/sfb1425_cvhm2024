@@ -8,7 +8,7 @@ def main():
     import requests
     import json  # Make Strava auth API call with your
 
-    json_folder = '/mnt/Aruba/PyCharmProjects/strava_club_challenge_automated/strava_json_data'
+    json_folder = '/mnt/Aruba/PyCharmProjects/strava_club_challenge_automated/logins/strava'
     athlete_code = ''  # From authorisation URL
 
     # client_code, client_secret and code
