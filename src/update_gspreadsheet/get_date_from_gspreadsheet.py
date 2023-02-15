@@ -1,7 +1,10 @@
-def get_epoch_time_from_two_cells_in_googlespreadsheet(spreadsheet, datecell, timecell):
-    import datetime
+def get_epoch_time_from_two_cells_in_googlespreadsheet(worksheet, datecell):
+    from datetime import datetime
+    import pandas
 
-    date = datetime.strptime(spreadsheet.acell(datecell).value, "%Y-%m-%d").date()
+    date = datetime.strptime(worksheet.acell(datecell).value, "%Y-%m-%d").date()
+    # TODO: include timecell
+    date_iso = date.isoformat()
+    # Always return in ISO 8601 format
 
-    # Always return as epoch time
-    return date.timestamp()
+    return date_iso
