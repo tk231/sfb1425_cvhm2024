@@ -39,15 +39,27 @@ def get_user_activities_from_strava(athlete_id, last_update_epoch, strava_client
     r = requests.get(f"{strava_api_url}?access_token={strava_tokens['access_token']}&per_page=20&page=1")
     r = r.json()
 
-    user_activites = pd.DataFrame(columns=[
-        "id",
-        "name",
-        "start_date_local",
-        "type",
-        "distance",
-        "moving_time",
-        "elapse_time",
-        "total_elevation_gain",
-        "private"
-    ])
+    user_activites = pd.DataFrame(columns=["id",
+                                           "name",
+                                           "start_date_local",
+                                           "type",
+                                           "distance",
+                                           "moving_time",
+                                           "elapse_time",
+                                           "total_elevation_gain",
+                                           "private"
+                                           ]
+                                  )
 
+    for x in range(len(r)):
+        user_activites.loc[x, 'id'] = r[x]['id']
+        user_activites.loc[x, 'name'] = r[x]['name']
+        user_activites.loc[x, 'start_date_local'] = r[x]['start_date_local']
+        user_activites.loc[x, 'type'] = r[x]['type']
+        user_activites.loc[x, 'distance'] = r[x]['distance']
+        user_activites.loc[x, 'moving_time'] = r[x]['moving_time']
+        user_activites.loc[x, 'elapse_time'] = r[x]['elapse_time']
+        user_activites.loc[x, 'total_elevation_gain'] = r[x]['total_elevation_gain']
+        user_activites.loc[x, 'private'] = r[x]['private']
+
+    return user_activites

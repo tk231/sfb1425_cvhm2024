@@ -1,8 +1,7 @@
 def main():
-    import src.get_date_from_googlespreadsheet
-    import src.connect_to_googlespreadsheet
-    import src.get_users_and_user_ids_googlespreadsheet
-    import src.get_user_stats_from_googlespreadsheet
+    from src.update_gspreadsheet import get_date_from_gspreadsheet, connect_to_gspreadsheet
+    import src.get_users_and_user_ids_gspreadsheet
+    import src.get_user_stats_from_gspreadsheet
     import src.get_user_stats_from_strava
 
     # Google Sheet details
@@ -26,12 +25,12 @@ def main():
     strava_client_secret = '60ed605025d846e6c580b66efc997b922cffd819'
 
     # Connect to the Google Sheet
-    worksht = src.connect_to_googlespreadsheet.connect_to_google_spreadsheet(google_sheet_key, google_sheet_name)
+    worksht = src.update_gspreadsheet.connect_to_googlespreadsheet.connect_to_gspreadsheet(google_sheet_key, google_sheet_name)
 
     # Get starting date
-    start_date = src.get_date_from_googlespreadsheet.get_epoch_time_from_two_cells_in_googlespreadsheet(worksht,
+    start_date = src.update_gspreadsheet.get_date_from_googlespreadsheet.get_epoch_time_from_two_cells_in_googlespreadsheet(worksht,
                                                                                                         start_date_cell)
-    end_date = src.get_date_from_googlespreadsheet.get_epoch_time_from_two_cells_in_googlespreadsheet(worksht, end_date_cell)
+    end_date = src.update_gspreadsheet.get_date_from_googlespreadsheet.get_epoch_time_from_two_cells_in_googlespreadsheet(worksht, end_date_cell)
 
     # Create data structures to store activity info
     # user_dict: dictionary from Google Sheets containing all users and their Strava IDs
@@ -42,10 +41,11 @@ def main():
                                                                                     athlete_name_column,
                                                                                     athlete_id_column,
                                                                                     row_of_start_of_data)
-    tally_dict = src.get_user_stats_from_googlespreadsheet.get_user_stats_from_googlespreadsheet(worksht,
-                                                                                                 activity_dict,
-                                                                                                 athlete_name_column,
-                                                                                                 row_of_start_of_data)
+
+    tally_dict = src.get_user_stats_from_googlespreadsheet.get_user_stats_from_gspreadsheet(worksht,
+                                                                                            activity_dict,
+                                                                                            athlete_name_column,
+                                                                                            row_of_start_of_data)
 
     # Get user activities from Strava
     update_dict = src.get_user_stats_from_strava.get_user_activities_from_strava()

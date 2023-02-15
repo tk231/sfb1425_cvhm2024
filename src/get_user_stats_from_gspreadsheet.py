@@ -1,4 +1,4 @@
-def get_user_stats_from_googlespreadsheet(worksheet, activity_dict, name_col, first_data_row):
+def get_user_stats_from_gspreadsheet(worksheet, activity_dict, name_col, first_data_row):
 
     user_list = worksheet.col_values(name_col)[first_data_row:]
     user_run_list = worksheet.col_values(activity_dict['Run'])[first_data_row:]
