@@ -6,8 +6,6 @@ def get_user_info(sht):  # iterate over tracking numbers
     plan_cell = 'C' + str(n)
 
     name = sht.acell(name_cell).value
-    strava_id = int(sht.acell(strava_id_cell).value)
-    plan = int(sht.acell(plan_cell).value)
 
     users = {}
 

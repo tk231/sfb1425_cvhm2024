@@ -38,7 +38,7 @@ def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_
         strava_token = new_strava_token
 
     # Get page of activities from Strava
-    r = requests.get(f"{strava_api_url}?access_token={strava_token['access_token']}&per_page=20&page=1")
+    r = requests.get(f"{strava_api_url}?access_token={strava_token['access_token']}&per_page=200&page=1")
     r = r.json()
 
     user_activities = pd.DataFrame(columns=["id",
@@ -64,10 +64,8 @@ def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_
         user_activities.loc[x, 'total_elevation_gain'] = r[x]['total_elevation_gain']
         user_activities.loc[x, 'private'] = r[x]['private']
 
-    last_activity_time = user_activities.iloc[0]['start_date_local']
 
     # TODO: implement end date
-    filtered_user_activities_df = user_activities.loc[
-        user_activities['start_date_local'] > start_datetime]
+    filtered_user_activities_df = user_activities.loc[user_activities['start_date_local'] > start_datetime]
 
     return filtered_user_activities_df
