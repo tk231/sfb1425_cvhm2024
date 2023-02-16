@@ -1,11 +1,10 @@
-import pandas as pd
 
 
-def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_secret, start_datetime,
-                                    cutoff_datetime):
+def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_secret, start_datetime):
     import json
     import time
     import requests
+    import pandas as pd
 
     strava_api_url = "https://www.strava.com/api/v3/activities"
 
@@ -13,10 +12,10 @@ def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_
 
     # Open json file to connect to Strava
     with open(f'{path_to_jsons}/strava_token_{athlete_id}.json') as json_file:
-        strava_tokens = json.load(json_file)
+        strava_token = json.load(json_file)
 
     # If access_token has expired, use refresh_token to get new access_token
-    if strava_tokens['expires_at'] < time.time():
+    if strava_token['expires_at'] < time.time():
         # Make new request
         response = requests.post(
             url='https://www.strava.com/oauth/token',
@@ -24,7 +23,7 @@ def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_
                 'client_id': strava_client_id,
                 'client_secret': strava_client_secret,
                 'grant_type': 'refresh_token',
-                'refresh_token': strava_tokens['refresh_token']
+                'refresh_token': strava_token['refresh_token']
             }
         )
 
@@ -32,14 +31,14 @@ def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_
         new_strava_token = response.json()
 
         # Save new tokens to file
-        with open('strava_tokens.json', 'w') as outfile:
+        with open(f'{path_to_jsons}/strava_token_{athlete_id}.json', 'w') as outfile:
             json.dump(new_strava_token, outfile)
 
         # Use new Strava tokens from now onwards
         strava_token = new_strava_token
 
     # Get page of activities from Strava
-    r = requests.get(f"{strava_api_url}?access_token={strava_tokens['access_token']}&per_page=20&page=1")
+    r = requests.get(f"{strava_api_url}?access_token={strava_token['access_token']}&per_page=20&page=1")
     r = r.json()
 
     user_activities = pd.DataFrame(columns=["id",
@@ -66,7 +65,9 @@ def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_
         user_activities.loc[x, 'private'] = r[x]['private']
 
     last_activity_time = user_activities.iloc[0]['start_date_local']
-    filtered_user_activities_df = user_activities[
-        user_activities['start_date_local'] > start_datetime & user_activities['start_date_local'] <= cutoff_datetime]
+
+    # TODO: implement end date
+    filtered_user_activities_df = user_activities.loc[
+        user_activities['start_date_local'] > start_datetime]
 
     return filtered_user_activities_df
