@@ -15,6 +15,8 @@ def main():
     start_time_cell = 'D1'
     end_date_cell = 'E1'
     end_time_cell = 'H1'
+    update_date_cell = 'Q27'
+    update_time_cell = 'R27'
 
     athlete_name_column = 1
     athlete_id_column = 2
@@ -62,8 +64,11 @@ def main():
 
     src.update_gspreadsheet.update_gspreadsheet_with_strava_data.update_gworksheet_with_strava_data(worksht, update_dict, activity_col_dict)
 
-    last_update_time = datetime.now()
-    print(f"Update done at {last_update_time}")
+    last_update_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    [last_update_date, last_update_time] = last_update_datetime.split(" ")
+    worksht.update(update_date_cell, last_update_date)
+    worksht.update(update_time_cell, last_update_time)
+    print(f"Update done at {last_update_datetime}")
 
 
 if __name__ == "__main__":
