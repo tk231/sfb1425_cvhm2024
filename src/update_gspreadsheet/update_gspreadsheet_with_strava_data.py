@@ -7,7 +7,6 @@ def update_gworksheet_with_strava_data(worksheet, update_dict, activity_dict):
         user_activity_dict = update_dict[user]
         # user_activity_dict contains the cumulative distances of single user
         for activity in user_activity_dict:
-
             worksheet.update_cell(user_row, activity_dict[activity], user_activity_dict[activity])
 
     return
