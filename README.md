@@ -26,4 +26,4 @@ Benji Knights Johnson made a good guide as to how to connect to Strava's API. Th
 
 1. Creating an App. Under website, only a URL that is of a URL structure has to be inputted. The `Autorization Callback Domain` only has to be filled with `localhost`.
 
-2. Authentic
+2. Authentication
