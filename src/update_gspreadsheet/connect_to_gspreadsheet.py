@@ -8,10 +8,10 @@ def authenticate_and_connect_to_gspreadsheet(key: str, worksheetname: str):
     from oauth2client.tools import run_flow
     import google.auth
 
-    client_secret = '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'
+    client_secret = ''
     scope = 'https://www.googleapis.com/auth/spreadsheets.readonly'
     storage = Storage(
-        '/mnt/Aruba/PyCharmProjects/strava_club_challenge_automated/logins/gsheet/client_secret_520138570687-4e7tlu697n14cpfildf7ghjbpbgdml7a.apps.googleusercontent.com.json')
+        '')
 
     credentials = storage.get()
     if credentials is None or credentials.invalid:
@@ -34,10 +34,10 @@ def connect_to_gspreadsheet2(key: str, worksheetname: str):
 
     credentials = google.oauth2.credentials.Credentials(
         'access_token',
-        refresh_token='1//09UWFp7FSIQ0-CgYIARAAGAkSNwF-L9IrEoGksI_c3B3nA5gVAQbgSbGKTO8kvXqbFxeTqOYas2UAGZd3v1xdu2UGtq7jovYKvCs',
-        token_uri='https://oauth2.googleapis.com/token',
-        client_id='520138570687-4e7tlu697n14cpfildf7ghjbpbgdml7a.apps.googleusercontent.com',
-        client_secret='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'
+        refresh_token='',
+        token_uri='',
+        client_id='',
+        client_secret=''
     )
     client = gspread.authorize(credentials)
     sheet = client.open(key).worksheet(worksheetname)
@@ -48,12 +48,12 @@ def authenticate_and_connect_to_gspreadsheet2(worksheetname: str, sheet: str):
     import gspread
 
     credentials = {"installed":
-                       {"client_id": "520138570687-4e7tlu697n14cpfildf7ghjbpbgdml7a.apps.googleusercontent.com",
-                        "project_id": "my-project-1554060283725",
-                        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-                        "token_uri": "https://oauth2.googleapis.com/token",
+                       {"client_id": "",
+                        "project_id": "",
+                        "auth_uri": "",
+                        "token_uri": "",
                         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-                        "client_secret": "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",
+                        "client_secret": "",
                         "redirect_uris": ["http://localhost"]
                         }
                    }
