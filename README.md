@@ -47,5 +47,7 @@ Benji Knights Johnson made a good guide as to how to connect to Strava's API. Th
 
 2. Authentication. See Maggie L.'s description on how it was done. This was very well documented. However, the code to save Strava tokens (i.e.: the `.json` response) should be changed to ensure that the tokens are saved in a secure location. Athletes only have to be authenticated once with the code in `src.authentication.strava_athlete_authentication`, running it again for the same athlete "forces the token to expire" and the authentification has to be done again. 
 
+3. Authenticate other athletes. This is done by the athletes first clicking on the following link, where `[client id]` is that of the Strava app. This will bring them to an authorisation page, where they have to allow the app to collect their data. Clicking on `Authorize` will take them to an empty page, where the athletes will have to send their URL to the person in charge of the code. In the URL is a `code`. This code is then input into the field `athlete_code` in `strava_athlete_authentication.py`, which fetches a `.json` file and saves it in `json_folder`. These `.json`-files are needed for the authentications.
+
 ## Rest of the Code
 
