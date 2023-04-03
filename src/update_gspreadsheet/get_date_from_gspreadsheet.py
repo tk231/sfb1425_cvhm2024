@@ -13,7 +13,7 @@ def get_epoch_time_from_two_cells_in_googlespreadsheet(worksheet, datecell, time
         return
 
     else:
-        date = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
+        date = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M:%S")
         date_iso = date.isoformat()
 
     return date_iso
