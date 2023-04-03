@@ -4,9 +4,13 @@ def get_all_new_user_stats_from_strava(user_dict, strava_client_id, strava_clien
 
     print(f"Parsing user activities into spreadsheet")
 
+    # Create dictionary to tally all the parsed (from Strava) numbers
     tally_dict = {}
 
     for user, user_id in user_dict.items():
+        # Get the stats for each user
+        tally_dict[user] = {}
+
         user_activities_df = get_user_activities_from_strava(user_id, strava_client_id, strava_client_secret, start_datetime, end_datetime)
 
         if not user_activities_df.empty:
