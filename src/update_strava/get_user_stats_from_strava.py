@@ -1,5 +1,3 @@
-
-
 def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_secret, start_datetime, end_datetime):
     import json
     import time
@@ -39,40 +37,43 @@ def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_
 
     # Get page of activities from Strava
     number_of_activities_to_parse = 200
-    r = requests.get(f"{strava_api_url}?access_token={strava_token['access_token']}&per_page={number_of_activities_to_parse}&page=1")
+    r = requests.get \
+        (f"{strava_api_url}?access_token={strava_token['access_token']}&per_page={number_of_activities_to_parse}&page=1")
     r = r.json()
 
-    user_activities = pd.DataFrame(columns=["id",
-                                            "name",
-                                            "start_date_local",
-                                            "type",
-                                            "distance",
-                                            "moving_time",
-                                            "elapsed_time",
-                                            "total_elevation_gain",
-                                            "private"
-                                            ]
-                                   )
+    user_activities_df = pd.DataFrame(columns=["id",
+                                               "name",
+                                               "start_date_local",
+                                               "type",
+                                               "distance",
+                                               "moving_time",
+                                               "elapsed_time",
+                                               "total_elevation_gain",
+                                               "private"
+                                               ]
+                                      )
 
     # if r['message'] == 'Authorization Error':
     #     pass
 
     for x in range(len(r)):
+        # Skip if activity is private
         if r[x]['private'] is True:
             pass
         else:
+            # Check if moving time is at least half of the elapsed time
             moving_time = r[x]['moving_time']
             elapsed_time = r[x]['elapsed_time']
-            if (moving_time < elapsed_time) and (moving_time >= (0.5 * elapsed_time)):
-                user_activities.loc[x, 'id'] = r[x]['id']
-                user_activities.loc[x, 'name'] = r[x]['name']
-                user_activities.loc[x, 'start_date_local'] = r[x]['start_date_local']
-                user_activities.loc[x, 'type'] = r[x]['type']
-                user_activities.loc[x, 'distance'] = r[x]['distance']
-                user_activities.loc[x, 'moving_time'] = r[x]['moving_time']
-                user_activities.loc[x, 'elapsed_time'] = r[x]['elapsed_time']
-                user_activities.loc[x, 'total_elevation_gain'] = r[x]['total_elevation_gain']
+            start_date_local = r[x]['start_date_local']
+            if (moving_time < elapsed_time) and (moving_time >= (0.5 * elapsed_time)) and \
+                    (start_datetime <= start_date_local < end_datetime):
+                user_activities_df.loc[x, 'id'] = r[x]['id']
+                user_activities_df.loc[x, 'name'] = r[x]['name']
+                user_activities_df.loc[x, 'start_date_local'] = r[x]['start_date_local']
+                user_activities_df.loc[x, 'type'] = r[x]['type']
+                user_activities_df.loc[x, 'distance'] = r[x]['distance']
+                user_activities_df.loc[x, 'moving_time'] = r[x]['moving_time']
+                user_activities_df.loc[x, 'elapsed_time'] = r[x]['elapsed_time']
+                user_activities_df.loc[x, 'total_elevation_gain'] = r[x]['total_elevation_gain']
 
-    filtered_user_activities_df = user_activities.loc[user_activities['start_date_local'] > start_datetime and user_activities['start_date_local'] < end_datetime]
-
-    return filtered_user_activities_df
+    return user_activities_df
