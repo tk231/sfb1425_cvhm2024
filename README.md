@@ -20,10 +20,34 @@ The ID of the Google Sheet document, i.e.: the string between `/d/` and `/edit`,
 
 The `Athlete ID` numbers have to be searched one by one. It can be found in the URL of the athlete: `https://www.strava.com/athletes/[STRAVA_ID]`.
 
+The API for Google Sheets is done with [`gspread` 5.7.0](https://docs.gspread.org/en/v5.7.0/). One has to first authenticate and authorise the application. A quick guide to do this is found in `gspread`'s documentation under ["Authentication"](https://docs.gspread.org/en/v5.7.0/oauth2.html). After obtaining the OAuth credentials, a dictionary of the `.json` file contents were made, and subsequently used for authorising the app. In the programme, this was done like this (almost exactly the same as in the `gspread` documentation):
+
+```
+def connect_to_gspreadsheet2(key: str, worksheetname: str):
+    import gspread
+    import google.oauth2.credentials
+
+    credentials = google.oauth2.credentials.Credentials(
+        'access_token',
+        refresh_token='',
+        token_uri='',
+        client_id='',
+        client_secret=''
+    )
+    client = gspread.authorize(credentials)
+    sheet = client.open(key).worksheet(worksheetname)
+    return sheet
+```
+
 ### Setting Up Strava App
 
 Benji Knights Johnson made a good guide as to how to connect to Strava's API. The connection is performed by:
 
 1. Creating an App. Under website, only a URL that is of a URL structure has to be inputted. The `Autorization Callback Domain` only has to be filled with `localhost`.
 
-2. Authentic
+2. Authentication. See Maggie L.'s description on how it was done. This was very well documented. However, the code to save Strava tokens (i.e.: the `.json` response) should be changed to ensure that the tokens are saved in a secure location. Athletes only have to be authenticated once with the code in `src.authentication.strava_athlete_authentication`, running it again for the same athlete "forces the token to expire" and the authentification has to be done again. 
+
+3. Authenticate other athletes. This is done by the athletes first clicking on the following link, where `[client id]` is that of the Strava app. This will bring them to an authorisation page, where they have to allow the app to collect their data. Clicking on `Authorize` will take them to an empty page, where the athletes will have to send their URL to the person in charge of the code. In the URL is a `code`. This code is then input into the field `athlete_code` in `strava_athlete_authentication.py`, which fetches a `.json` file and saves it in `json_folder`. These `.json`-files are needed for the authentications.
+
+## Rest of the Code
+
