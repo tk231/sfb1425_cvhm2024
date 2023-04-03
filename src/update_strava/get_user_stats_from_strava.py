@@ -1,6 +1,6 @@
 
 
-def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_secret, start_datetime):
+def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_secret, start_datetime, end_datetime):
     import json
     import time
     import requests
@@ -38,7 +38,8 @@ def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_
         strava_token = new_strava_token
 
     # Get page of activities from Strava
-    r = requests.get(f"{strava_api_url}?access_token={strava_token['access_token']}&per_page=200&page=1")
+    number_of_activities_to_parse = 200
+    r = requests.get(f"{strava_api_url}?access_token={strava_token['access_token']}&per_page={number_of_activities_to_parse}&page=1")
     r = r.json()
 
     user_activities = pd.DataFrame(columns=["id",
@@ -53,19 +54,25 @@ def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_
                                             ]
                                    )
 
+    # if r['message'] == 'Authorization Error':
+    #     pass
+
     for x in range(len(r)):
-        user_activities.loc[x, 'id'] = r[x]['id']
-        user_activities.loc[x, 'name'] = r[x]['name']
-        user_activities.loc[x, 'start_date_local'] = r[x]['start_date_local']
-        user_activities.loc[x, 'type'] = r[x]['type']
-        user_activities.loc[x, 'distance'] = r[x]['distance']
-        user_activities.loc[x, 'moving_time'] = r[x]['moving_time']
-        user_activities.loc[x, 'elapsed_time'] = r[x]['elapsed_time']
-        user_activities.loc[x, 'total_elevation_gain'] = r[x]['total_elevation_gain']
-        user_activities.loc[x, 'private'] = r[x]['private']
+        if r[x]['private'] is True:
+            pass
+        else:
+            moving_time = r[x]['moving_time']
+            elapsed_time = r[x]['elapsed_time']
+            if (moving_time < elapsed_time) and (moving_time >= (0.5 * elapsed_time)):
+                user_activities.loc[x, 'id'] = r[x]['id']
+                user_activities.loc[x, 'name'] = r[x]['name']
+                user_activities.loc[x, 'start_date_local'] = r[x]['start_date_local']
+                user_activities.loc[x, 'type'] = r[x]['type']
+                user_activities.loc[x, 'distance'] = r[x]['distance']
+                user_activities.loc[x, 'moving_time'] = r[x]['moving_time']
+                user_activities.loc[x, 'elapsed_time'] = r[x]['elapsed_time']
+                user_activities.loc[x, 'total_elevation_gain'] = r[x]['total_elevation_gain']
 
-
-    # TODO: implement end date
-    filtered_user_activities_df = user_activities.loc[user_activities['start_date_local'] > start_datetime]
+    filtered_user_activities_df = user_activities.loc[user_activities['start_date_local'] > start_datetime and user_activities['start_date_local'] < end_datetime]
 
     return filtered_user_activities_df
