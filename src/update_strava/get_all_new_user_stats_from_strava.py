@@ -2,7 +2,7 @@ def get_all_new_user_stats_from_strava(user_dict, strava_client_id, strava_clien
     import time
     from src.update_strava.get_user_stats_from_strava import get_user_activities_from_strava
 
-    print(f"Parsing user activities into spreadsheet")
+    print(f"Parsing user activities from Strava")
 
     # Create dictionary to tally all the parsed (from Strava) numbers
     tally_dict = {}
