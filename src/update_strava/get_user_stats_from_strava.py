@@ -65,7 +65,7 @@ def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_
             moving_time = r[x]['moving_time']
             elapsed_time = r[x]['elapsed_time']
             start_date_local = r[x]['start_date_local']
-            if (moving_time < elapsed_time) and (moving_time >= (0.5 * elapsed_time)) and \
+            if (moving_time <= elapsed_time) and (moving_time >= (0.5 * elapsed_time)) and \
                     (start_datetime <= start_date_local < end_datetime):
                 user_activities_df.loc[x, 'id'] = r[x]['id']
                 user_activities_df.loc[x, 'name'] = r[x]['name']
