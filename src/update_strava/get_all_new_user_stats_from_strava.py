@@ -15,15 +15,18 @@ def get_all_user_stats_from_strava(user_dict, strava_client_id, strava_client_se
 
         # Filter user_activities for only interested activities (i.e.: running, cycling, walking, and swimming)
         # Use of '|' instead of 'or' due to need of bitwise operation, else overload
-        user_activities_filtered_df = user_activities_df[(user_activities_df['type'] == 'Run') | (user_activities_df['type'] == 'Ride') | (user_activities_df['type'] == 'Walk') | (user_activities_df['type'] == 'Swim')]
+        user_activities_filtered_df = user_activities_df[(user_activities_df['type'] == 'Run') | (user_activities_df['type'] == 'Virtual Run') | (user_activities_df['type'] == 'Hike') | (user_activities_df['type'] == 'Ride') | (user_activities_df['type'] == 'Virtual Ride') | (user_activities_df['type'] == 'Walk') | (user_activities_df['type'] == 'Swim')]
 
         if not user_activities_filtered_df.empty:
             run_sum_in_m = user_activities_filtered_df.loc[user_activities_filtered_df['type'] == 'Run', 'distance'].sum()
-            tally_dict[user]['Run'] = run_sum_in_m / 1000
+            virtual_run_sum_in_m = user_activities_filtered_df.loc[user_activities_filtered_df['type'] == 'Virtual Run', 'distance'].sum()
+            tally_dict[user]['Run'] = (run_sum_in_m + virtual_run_sum_in_m) / 1000
             ride_sum_in_m = user_activities_filtered_df.loc[user_activities_filtered_df['type'] == 'Ride', 'distance'].sum()
-            tally_dict[user]['Ride'] = ride_sum_in_m / 1000
+            virtual_ride_sum_in_m = user_activities_filtered_df.loc[user_activities_filtered_df['type'] == 'Virtual Ride', 'distance'].sum()
+            tally_dict[user]['Ride'] = (ride_sum_in_m + virtual_ride_sum_in_m) / 1000
             walk_sum_in_m = user_activities_filtered_df.loc[user_activities_filtered_df['type'] == 'Walk', 'distance'].sum()
-            tally_dict[user]['Walk'] = walk_sum_in_m / 1000
+            hike_sum_in_m = user_activities_filtered_df.loc[user_activities_filtered_df['type'] == 'Hike', 'distance'].sum()
+            tally_dict[user]['Walk'] = (walk_sum_in_m + hike_sum_in_m) / 1000
             swim_sum_in_m = user_activities_filtered_df.loc[user_activities_filtered_df['type'] == 'Swim', 'distance'].sum()
             tally_dict[user]['Swim'] = swim_sum_in_m / 1000
             tally_dict[user]['Cumulative Elevation'] = user_activities_filtered_df['total_elevation_gain'].sum()
