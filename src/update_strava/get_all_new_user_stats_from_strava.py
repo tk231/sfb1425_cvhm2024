@@ -43,7 +43,11 @@ def get_all_user_stats_from_strava(user_dict, strava_client_id, strava_client_se
             tally_dict[user]['Swim'] = swim_sum_in_m / 1000
             tally_dict[user]['Cumulative Elevation'] = user_activities_filtered_df['total_elevation_gain'].sum()
             moving_time_in_s = user_activities_filtered_df['moving_time'].sum()
-            tally_dict[user]['Cumulative Time'] = time.strftime('%H:%M:%S', time.gmtime(moving_time_in_s))
+            # gmtime truncates after 23:59:59, so use divmod
+            # See https://stackoverflow.com/a/775075
+            moving_time_str_min, moving_time_str_sec = divmod(moving_time_in_s, 60)
+            moving_time_str_hour, moving_time_str_min = divmod(moving_time_str_min, 60)
+            tally_dict[user]['Cumulative Time'] = f"{moving_time_str_hour:d}:{moving_time_str_min:02d}:{moving_time_str_sec:02d}"
             tally_dict[user]['Number of Activities'] = user_activities_filtered_df.shape[0]
 
         else:
