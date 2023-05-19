@@ -1,4 +1,14 @@
 def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_secret, start_datetime, end_datetime):
+    """
+    Gets activities from single user off Strava
+
+    :param athlete_id:
+    :param strava_client_id:
+    :param strava_client_secret:
+    :param start_datetime:
+    :param end_datetime:
+    :return:
+    """
     import json
     import time
     import requests
@@ -75,5 +85,9 @@ def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_
                 user_activities_df.loc[x, 'moving_time'] = r[x]['moving_time']
                 user_activities_df.loc[x, 'elapsed_time'] = r[x]['elapsed_time']
                 user_activities_df.loc[x, 'total_elevation_gain'] = r[x]['total_elevation_gain']
+
+    # Check if user_activities_df are nearing the number_of_activities_to_parse limit
+    if user_activities_df.shape[0] + 50 > number_of_activities_to_parse:
+        print("Need to raise the number of activities to parse in get_user_stats_from_strava")
 
     return user_activities_df
