@@ -46,7 +46,7 @@ def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_
         strava_token = new_strava_token
 
     # Get page of activities from Strava
-    number_of_activities_to_parse = 300
+    number_of_activities_to_parse = 200
     r = requests.get \
         (f"{strava_api_url}?access_token={strava_token['access_token']}&per_page={number_of_activities_to_parse}&page=1")
 
@@ -64,9 +64,6 @@ def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_
                                                    "private"
                                                    ]
                                           )
-
-        # if r['message'] == 'Authorization Error':
-        #     continue
 
         for x in range(len(r)):
             # Skip if activity is private
@@ -90,9 +87,34 @@ def get_user_activities_from_strava(athlete_id, strava_client_id, strava_client_
 
         # Check if user_activities_df are nearing the number_of_activities_to_parse limit
         number_of_activities_in_user_activities_df = user_activities_df.shape[0]
-        if number_of_activities_in_user_activities_df + 20 > number_of_activities_to_parse:
+        if number_of_activities_in_user_activities_df >= number_of_activities_to_parse:
             print(f"Athlete {athlete_id}'s user_activities_df length has {number_of_activities_in_user_activities_df}, "
                   f"time to increase number_of_activities_to_parse!")
+
+            r2 = requests.get \
+                (f"{strava_api_url}?access_token={strava_token['access_token']}&per_page={number_of_activities_to_parse}&page=2")
+
+            r2 = r2.json()
+
+            for x in range(len(r2)):
+                # Skip if activity is private
+                if r2[x]['private'] is True:
+                    pass
+                else:
+                    # Check if moving time is at least half of the elapsed time
+                    moving_time = r2[x]['moving_time']
+                    elapsed_time = r2[x]['elapsed_time']
+                    start_date_local = r2[x]['start_date_local']
+                    if (moving_time <= elapsed_time) and (moving_time >= (0.5 * elapsed_time)) and \
+                            (start_datetime <= start_date_local < end_datetime):
+                        user_activities_df.loc[x, 'id'] = r2[x]['id']
+                        user_activities_df.loc[x, 'name'] = r2[x]['name']
+                        user_activities_df.loc[x, 'start_date_local'] = r2[x]['start_date_local']
+                        user_activities_df.loc[x, 'type'] = r2[x]['type']
+                        user_activities_df.loc[x, 'distance'] = r2[x]['distance']
+                        user_activities_df.loc[x, 'moving_time'] = r2[x]['moving_time']
+                        user_activities_df.loc[x, 'elapsed_time'] = r2[x]['elapsed_time']
+                        user_activities_df.loc[x, 'total_elevation_gain'] = r2[x]['total_elevation_gain']
 
         return user_activities_df
 
