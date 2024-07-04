@@ -42,7 +42,7 @@ def refresh_tokens(token: dict, strava_client_id: int, strava_client_secret: str
             'refresh_token': token['refresh_token']
         }
     )
-    
+
     if response.status_code == 200:
         new_strava_token = response.json()
 

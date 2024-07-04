@@ -1,4 +1,5 @@
 # Dash Dashboard for Group Strava Activity
+
 ## Credits
 
 This project has been massively helped by the following people:
@@ -31,6 +32,10 @@ strava_club_challenge_automated
 │   ├── athlete_access_tokens
 │   └── strava_app.yaml
 ├── dash_folder
+│   ├── 0_frontpage.py
+│   ├── 1_table.py
+│   ├── 2_athlete_comparison.py
+│   └── 3_activity_breakdown.py
 ├── data
 ├── resources
 │   ├── athlete_access_tokens
@@ -59,7 +64,7 @@ Contains the files needed for the Dash dashboard. These are used in `main.py`. T
 
 #### Data
 
-Contains a folder called `athlete_pickles`, where the individual athlete pickles are stored within. Additionally, pickle containing all the collated data, `final_table_pickle.pkl `, and an Excel table listing all the athletes, their teams, and their Strava IDs, `athlete_database.xlsx`, are also stored here.
+Contains a folder called `athlete_pickles`, where the individual athlete pickles are stored within. Additionally, pickle containing all the collated data, `final_table_pickle.pkl`, and an Excel table listing all the athletes, their teams, and their Strava IDs, `athlete_database.xlsx`, are also stored here.
 
 #### Resources
 
